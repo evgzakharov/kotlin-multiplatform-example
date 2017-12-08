@@ -1,0 +1,76 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://dl.bintray.com/kotlin/kotlin-eap"
+        }
+        maven {
+            url "https://repo.gradle.org/gradle/libs-releases-local"
+        }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.21"
+    }
+}
+
+apply plugin: 'kotlin-platform-js'
+apply plugin: 'org.jetbrains.kotlin.frontend'
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "https://kotlin.bintray.com/kotlin-js-wrappers/" }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:0.6.6"
+
+//    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.2"
+
+    expectedBy project(":common")
+
+    testCompile "junit:junit:4.12"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+}
+
+kotlinFrontend {
+// uncomment this to specify exact nodejs version (bundle will be downloaded)
+//    downloadNodeJsVersion = "8.7.0"
+    sourceMaps = true
+
+    npm {
+//        dependency("react")
+//        dependency("react-dom")
+//        dependency("react-router")
+//        dependency("jquery")
+//        dependency("react-markdown")
+//
+        devDependency("css-loader")
+        devDependency("style-loader")
+        devDependency("babel-loader")
+        devDependency("babel-core")
+        devDependency("karma")
+    }
+
+    webpackBundle {
+        port = 8080
+        bundleName = "frontend"
+        contentPath = file('src/main/web')
+    }
+}
+
+compileKotlin2Js {
+    kotlinOptions.metaInfo = true
+    kotlinOptions.outputFile = "$project.buildDir.path/js/${project.name}.js"
+    kotlinOptions.sourceMap = true
+    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.main = "call"
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}

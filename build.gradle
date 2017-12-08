@@ -1,0 +1,23 @@
+group 'test'
+version '1.0-SNAPSHOT'
+
+subprojects {
+    buildscript {
+        ext.kotlin_version = '1.2.0'
+
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        }
+    }
+
+    task initSourceFolders {
+        doLast {
+            sourceSets*.java.srcDirs*.each { it.mkdirs() }
+            sourceSets*.kotlin.srcDirs*.each { it.mkdirs() }
+            sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+        }
+    }
+}

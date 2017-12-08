@@ -1,0 +1,5 @@
+rootProject.name = 'kotlin-multimodule-example'
+
+include ":frontend", ":backend", ":common"
+
+
